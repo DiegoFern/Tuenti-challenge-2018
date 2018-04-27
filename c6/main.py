@@ -26,8 +26,8 @@ def estimate_after_release(next_index_note,time_released,notes):
     if next_index_note>=len(notes):
         return 0
     time,period,punt=notes[next_index_note]
-    return max(punt+estimate_after_release(next_index_note+1,time+1,notes),
-            estimate_after_release(next_index_note_bis+1,time_released,notes))
+    return max(punt+estimate_after_release(next_index_note_bis+1,time+1,notes),
+            estimate_after_release(next_index_note+1,time_released,notes))
 
 def main():
    import sys
