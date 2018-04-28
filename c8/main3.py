@@ -1,18 +1,43 @@
 from functools import reduce
+
 def parser(line,l):
     a,b=list(map(int,line.split()))
     return ((a-b-l )%a),a
+
 def main():
     import sys
     for c in range(int(next(sys.stdin))):
         INEQS=[]
         for l in range(int(next(sys.stdin))):
-            INEQS.append((parser(next(sys.stdin),l)))
+            INEQS.append(list((parser(next(sys.stdin),l))))
+        print(INEQS)
         if 1 or c==12:
             try:
                 print('Case #%s: %s'%(c+1,int(chinese_remainder(*list(zip(*INEQS))))))
             except :
                 print('Case #%s: NEVER'%(c+1))
+
+def rewrite(Ls):
+    a,n=Ls
+    facts=factorize(n)
+    for f in facts:
+        yield (a,f)
+primes=[2]
+for i in range(2,10000):
+    if not(any(map(lambda x:i%x==0,primes))):
+        primes.append(i)
+def factorize(a):
+    descomp=[]
+    for p in primes:
+        if a%p:
+            descomp.append(p)
+            a=a/p
+            while a%p==0:
+                descomp[-1]*=p
+                a=a/p
+    if a>1:
+        descomp.append(a)
+    return descomp
 
 class Except(Exception):
     pass
