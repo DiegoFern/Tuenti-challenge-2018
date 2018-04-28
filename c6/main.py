@@ -27,7 +27,7 @@ def estimate_after_release(next_index_note,time_released,notes):
         return 0
     _,time,punt=notes[next_index_note]
     case_pulse_note=punt+estimate_after_release(next_index_note,time,notes)
-    case_pulse_not_note=estimate_after_release(next_index_note,time_released,notes)
+    case_pulse_not_note=estimate_after_release(next_index_note,0,notes)
     return max(case_pulse_not_note,case_pulse_note)
 
 from itertools import groupby
