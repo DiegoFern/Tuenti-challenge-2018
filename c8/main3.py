@@ -1,5 +1,5 @@
 from functools import reduce
-
+from itertools import groupby
 def parser(line,l):
     a,b=list(map(int,line.split()))
     return ((a-b-l )%a),a
@@ -9,34 +9,52 @@ def main():
     for c in range(int(next(sys.stdin))):
         INEQS=[]
         for l in range(int(next(sys.stdin))):
+            
             INEQS.append(list((parser(next(sys.stdin),l))))
-        print(INEQS)
-        if 1 or c==12:
+    
+        if 1 or c in (7,27):#option to debug
             try:
-                print('Case #%s: %s'%(c+1,int(chinese_remainder(*list(zip(*INEQS))))))
+                print('Case #%s: %s'%(c+1,int(chinese_remainder(*list(zip(*rewrite(INEQS)))))))
             except :
                 print('Case #%s: NEVER'%(c+1))
 
 def rewrite(Ls):
-    a,n=Ls
-    facts=factorize(n)
-    for f in facts:
-        yield (a,f)
+    d={}
+    ans=[]
+    for L in Ls:
+        a,n=L
+        facts=factorize(n)
+        for f,exp in facts:
+            y=(a,f)
+            if y not in d:
+                ans.append((a%(f**exp),f,exp))
+    ans.sort(key=lambda x:(-x[1],-x[2]))
+    for _,v in groupby(ans ,key=lambda x:x[1],):
+        v1=next(v)
+        a1,f1,exp1=v1#x mod f^exp=a
+        for a2,f,exp in v:
+            if a1 % (f**exp)!=a2%(f**exp):
+                raise Except()
+        yield (a1,f1**exp1)
+
+
 primes=[2]
 for i in range(2,10000):
     if not(any(map(lambda x:i%x==0,primes))):
         primes.append(i)
+
+
 def factorize(a):
     descomp=[]
     for p in primes:
-        if a%p:
-            descomp.append(p)
+        if a%p==0:
+            descomp.append([p,1])
             a=a/p
             while a%p==0:
-                descomp[-1]*=p
+                descomp[-1][1]+=1
                 a=a/p
     if a>1:
-        descomp.append(a)
+        descomp.append([a,1])
     return descomp
 
 class Except(Exception):
